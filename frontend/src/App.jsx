@@ -1,0 +1,59 @@
+﻿import React from "react";
+import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
+
+import Login from "./pages/Login";
+import AdminDashboard from "./pages/AdminDashboard";
+import ClientDashboard from "./pages/ClientDashboard";
+
+function getStoredUser() {
+  try {
+    return JSON.parse(localStorage.getItem("udpAlertUser") || "null");
+  } catch {
+    localStorage.removeItem("udpAlertUser");
+    return null;
+  }
+}
+
+function RequireRole({ role, children }) {
+  const user = getStoredUser();
+  if (!user?.token) return <Navigate to="/login" replace />;
+  if (user.role !== role) return <Navigate to="/login" replace />;
+  return children;
+}
+
+function App() {
+  return (
+    <BrowserRouter>
+      <Routes>
+
+        {/* Login Page */}
+        <Route path="/login" element={<Login />} />
+
+        <Route
+          path="/admin"
+          element={<RequireRole role="admin"><AdminDashboard /></RequireRole>}
+        />
+
+        <Route
+          path="/client"
+          element={<RequireRole role="client"><ClientDashboard /></RequireRole>}
+        />
+
+        {/* Default Route */}
+        <Route
+          path="/"
+          element={<Navigate to="/login" replace />}
+        />
+
+        {/* Invalid Route */}
+        <Route
+          path="*"
+          element={<Navigate to="/login" replace />}
+        />
+
+      </Routes>
+    </BrowserRouter>
+  );
+}
+
+export default App;
