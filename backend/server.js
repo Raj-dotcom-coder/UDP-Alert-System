@@ -7,14 +7,23 @@ const { connectDatabase, closeDatabase } = require('./db');
 const { startUDPServer, stopUDPServer } = require('./udpServer');
 
 const app = express();
-app.use(cors());
+const corsOrigins = process.env.CORS_ORIGIN
+	?.split(',')
+	.map((origin) => origin.trim())
+	.filter(Boolean);
+app.use(cors(corsOrigins?.length ? { origin: corsOrigins } : {}));
 app.use(express.json({ limit: '32kb' }));
+const udpEnabled = process.env.DISABLE_UDP_SERVER !== 'true';
 
 app.get('/', (req, res) => {
 	res.json({
 		success: true,
 		message: 'UDP Alert System Backend is running.',
-		services: { http: 'Running', udp: 'Running', database: 'MongoDB' },
+		services: {
+			http: 'Running',
+			udp: udpEnabled ? 'Running' : 'Disabled by deployment configuration',
+			database: 'MongoDB'
+		},
 		udpPort: Number(process.env.UDP_PORT || 41234)
 	});
 });
@@ -27,10 +36,10 @@ app.use((req, res) => {
 	res.status(404).json({ success: false, message: 'API endpoint not found.' });
 });
 
-const HTTP_PORT = Number(process.env.HTTP_PORT || 5000);
+const HTTP_PORT = Number(process.env.PORT || process.env.HTTP_PORT || 5000);
 connectDatabase()
 	.then(() => {
-		startUDPServer();
+		if (udpEnabled) startUDPServer();
 		app.listen(HTTP_PORT, '0.0.0.0', () => {
 			console.log(`HTTP API Server running on port ${HTTP_PORT}`);
 		});

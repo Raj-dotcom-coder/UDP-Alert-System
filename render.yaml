@@ -1,0 +1,26 @@
+services:
+  - type: web
+    name: udp-alert-backend
+    runtime: node
+    plan: free
+    region: oregon
+    rootDir: backend
+    buildCommand: npm ci
+    startCommand: npm start
+    healthCheckPath: /
+    autoDeploy: true
+    envVars:
+      - key: NODE_ENV
+        value: production
+      - key: ADMIN_USERNAME
+        value: admin
+      - key: ADMIN_PASSWORD
+        generateValue: true
+      - key: JWT_SECRET
+        generateValue: true
+      - key: MONGODB_DB
+        value: udp_alert_system
+      - key: CORS_ORIGIN
+        value: https://raj-dotcom-coder.github.io
+      - key: DISABLE_UDP_SERVER
+        value: true
