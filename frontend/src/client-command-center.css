@@ -1,0 +1,737 @@
+.udp-client-page {
+  --bg: #f3f7fb;
+  --panel: #ffffff;
+  --panel-alt: #edf3f9;
+  --line: #dfe8f3;
+  --line-strong: #c7d4e7;
+  --text: #16304a;
+  --text-soft: #5e7187;
+  --brand: #2457a7;
+  --brand-deep: #1a3f7a;
+  --brand-soft: #eaf1fb;
+  --success: #2a7f5a;
+  --success-soft: #eaf8f2;
+  --warning: #d29220;
+  --warning-soft: #fff4dc;
+  --danger: #bf3d3d;
+  --danger-soft: #fff1f1;
+  --shadow: 0 10px 30px rgb(17 40 67 / 8%);
+  font-family: Inter, "Segoe UI", Arial, sans-serif;
+  color: var(--text);
+  background:
+    radial-gradient(circle at top left, #f7faff 0%, rgba(247, 250, 255, 0) 30%),
+    linear-gradient(180deg, #f3f7fb 0%, #eef3f8 100%);
+  min-height: 100vh;
+  margin: 0;
+  padding: 0;
+  font-synthesis: none;
+  text-rendering: optimizeLegibility;
+  font-optical-sizing: auto;
+  line-height: 1.5;
+}
+
+.udp-client-page * {
+  box-sizing: border-box;
+}
+
+.udp-client-page button,
+.udp-client-page input,
+.udp-client-page textarea {
+  font: inherit;
+}
+
+.udp-client-page button {
+  cursor: pointer;
+}
+
+.udp-client-page .page {
+  width: min(100% - 40px, 1120px);
+  margin: 0 auto;
+  padding: 28px 0 20px;
+}
+
+.udp-client-page .topbar {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  padding: 0 0 20px;
+  border-bottom: 1px solid var(--line);
+}
+
+.udp-client-page .brand-mark {
+  display: grid;
+  place-items: center;
+  width: 46px;
+  height: 46px;
+  border-radius: 14px;
+  background: linear-gradient(135deg, var(--brand), var(--brand-deep));
+  color: #fff;
+  box-shadow: 0 10px 18px rgb(36 87 167 / 20%);
+  transition: transform 180ms ease, box-shadow 180ms ease;
+  flex-shrink: 0;
+}
+
+.udp-client-page .brand-mark:hover {
+  transform: translateY(-1px) rotate(-3deg);
+  box-shadow: 0 12px 24px rgb(36 87 167 / 24%);
+}
+
+.udp-client-page .brand-mark svg {
+  width: 25px;
+  height: 25px;
+}
+
+.udp-client-page .brand-copy h1 {
+  margin: 0;
+  color: var(--text);
+  font-size: 17px;
+  font-weight: 700;
+  letter-spacing: -0.02em;
+}
+
+.udp-client-page .brand-copy p {
+  margin: 4px 0 0;
+  color: var(--text-soft);
+  font-size: 12px;
+}
+
+.udp-client-page .topbar-actions {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-left: auto;
+}
+
+.udp-client-page .status {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 8px 12px;
+  border: 1px solid var(--warning-soft);
+  border-radius: 8px;
+  background: var(--warning-soft);
+  color: #8a6505;
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: 0.02em;
+}
+
+.udp-client-page .status-dot,
+.udp-client-page .live-label i {
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  background: currentColor;
+}
+
+.udp-client-page .status.good {
+  border-color: var(--success-soft);
+  background: var(--success-soft);
+  color: var(--success);
+}
+
+.udp-client-page .status.bad {
+  border-color: var(--danger-soft);
+  background: var(--danger-soft);
+  color: var(--danger);
+}
+
+.udp-client-page .status.good .status-dot {
+  animation: status-blink 2.4s ease-in-out infinite;
+}
+
+.udp-client-page .signout-link {
+  color: #64748b;
+  text-decoration: none;
+  font-size: 12px;
+  font-weight: 600;
+  padding: 6px 12px;
+  border-radius: 6px;
+  border: 1px solid var(--line);
+  background: var(--panel);
+  transition: all 160ms ease;
+}
+
+.udp-client-page .signout-link:hover {
+  background: #f1f5f9;
+  color: #1e293b;
+}
+
+.udp-client-page main {
+  padding: 30px 0 18px;
+}
+
+.udp-client-page .intro {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 24px;
+  min-height: 170px;
+  margin: 0 0 18px;
+}
+
+.udp-client-page .intro-copy {
+  max-width: 620px;
+}
+
+.udp-client-page .eyebrow,
+.udp-client-page .card-kicker {
+  margin: 0;
+  color: #4d6d9c;
+  font-size: 10px;
+  font-weight: 800;
+  letter-spacing: 1.25px;
+  text-transform: uppercase;
+}
+
+.udp-client-page .intro h2 {
+  margin: 10px 0 8px;
+  color: var(--text);
+  font-size: clamp(27px, 4vw, 36px);
+  line-height: 1.1;
+  letter-spacing: -0.05em;
+}
+
+.udp-client-page .intro-copy > p:last-child {
+  margin: 0;
+  max-width: 620px;
+  color: var(--text-soft);
+  font-size: 14px;
+  line-height: 1.7;
+}
+
+.udp-client-page .network-art {
+  width: min(34%, 300px);
+  min-width: 190px;
+  overflow: visible;
+}
+
+.udp-client-page .network-line {
+  fill: none;
+  stroke: #d3dfef;
+  stroke-width: 2;
+}
+
+.udp-client-page .network-dash {
+  fill: none;
+  stroke: #7ea1d7;
+  stroke-dasharray: 3 8;
+  stroke-linecap: round;
+  stroke-width: 2;
+  animation: dash-flow 9s linear infinite;
+}
+
+.udp-client-page .network-hub {
+  fill: var(--brand);
+  filter: drop-shadow(0 8px 16px rgb(36 87 167 / 18%));
+}
+
+.udp-client-page .network-hub-inner {
+  fill: #fff;
+  opacity: 0.15;
+}
+
+.udp-client-page .network-hub-lines {
+  fill: none;
+  stroke: #fff;
+  stroke-linecap: round;
+  stroke-width: 2;
+}
+
+.udp-client-page .network-node {
+  fill: #fff;
+  stroke: #dfeaf6;
+  stroke-width: 1.5;
+  transition: transform 200ms ease, stroke 200ms ease;
+  transform-box: fill-box;
+  transform-origin: center;
+}
+
+.udp-client-page .network-art:hover .network-node {
+  stroke: #84a8d7;
+}
+
+.udp-client-page .network-art:hover .node-one {
+  transform: translate(-2px, -2px);
+}
+
+.udp-client-page .network-art:hover .node-two {
+  transform: translate(2px, -2px);
+}
+
+.udp-client-page .network-art:hover .node-three {
+  transform: translate(-2px, 2px);
+}
+
+.udp-client-page .network-art:hover .node-four {
+  transform: translate(2px, 2px);
+}
+
+.udp-client-page .network-device {
+  fill: none;
+  stroke: #5575a4;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+  stroke-width: 1.8;
+}
+
+.udp-client-page .network-pulse {
+  fill: none;
+  stroke: #6ea0d8;
+  stroke-width: 1.5;
+  transform-box: fill-box;
+  transform-origin: center;
+  animation: hub-pulse 3.2s ease-out infinite;
+}
+
+.udp-client-page .ticker {
+  overflow: hidden;
+  margin: 0 0 18px;
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  background: var(--panel-alt);
+  color: #5b7895;
+}
+
+.udp-client-page .ticker-track {
+  display: flex;
+  width: max-content;
+  animation: ticker-scroll 24s linear infinite;
+}
+
+.udp-client-page .ticker-group {
+  display: flex;
+  flex: 0 0 auto;
+  min-width: 50vw;
+  align-items: center;
+  justify-content: space-around;
+  gap: 22px;
+  padding: 10px 18px;
+  font-size: 10px;
+  font-weight: 800;
+  letter-spacing: 1.2px;
+  white-space: nowrap;
+}
+
+.udp-client-page .ticker-track b {
+  color: #7f9cc0;
+  font-size: 14px;
+}
+
+.udp-client-page .ticker:hover .ticker-track {
+  animation-play-state: paused;
+}
+
+.udp-client-page .alert-panel {
+  min-height: 240px;
+  padding: 28px;
+  border: 1px solid var(--line);
+  border-radius: 14px;
+  background: var(--panel);
+  box-shadow: var(--shadow);
+  transition: all 200ms ease;
+}
+
+.udp-client-page .alert-panel.has-alert {
+  border-color: #f1c7b9;
+  background: linear-gradient(180deg, #fffaf7 0%, #fff7f5 100%);
+  animation: alert-pulse 2s ease-in-out infinite alternate;
+}
+
+.udp-client-page .waiting-icon {
+  display: grid;
+  place-items: center;
+  width: 42px;
+  height: 42px;
+  border-radius: 50%;
+  border: 1px solid #bfe4ce;
+  background: var(--success-soft);
+  color: var(--success);
+  font-size: 21px;
+  font-weight: 700;
+}
+
+.udp-client-page .alert-panel h2 {
+  margin: 15px 0 8px;
+  color: #1d3557;
+  font-size: 24px;
+  line-height: 1.2;
+}
+
+.udp-client-page .alert-panel > p {
+  max-width: 640px;
+  margin: 0;
+  color: var(--text-soft);
+  font-size: 14px;
+  line-height: 1.7;
+}
+
+.udp-client-page .alert-symbol {
+  display: grid;
+  place-items: center;
+  width: 40px;
+  height: 40px;
+  border-radius: 10px;
+  color: #fff;
+  font-size: 24px;
+  font-weight: 700;
+}
+
+.udp-client-page .alert-symbol.priority-high {
+  background: var(--danger);
+  box-shadow: 0 8px 18px rgb(191 61 61 / 22%);
+}
+
+.udp-client-page .alert-symbol.priority-moderate {
+  background: var(--warning);
+  box-shadow: 0 8px 18px rgb(210 146 32 / 22%);
+}
+
+.udp-client-page .alert-symbol.priority-low {
+  background: var(--success);
+  box-shadow: 0 8px 18px rgb(42 127 90 / 18%);
+}
+
+.udp-client-page .priority {
+  margin-top: 13px;
+  font-size: 10px;
+  font-weight: 800;
+  letter-spacing: 1.2px;
+  text-transform: uppercase;
+}
+
+.udp-client-page .priority.priority-high {
+  color: var(--danger);
+}
+
+.udp-client-page .priority.priority-moderate {
+  color: #a86a12;
+}
+
+.udp-client-page .priority.priority-low {
+  color: var(--success);
+}
+
+.udp-client-page .alert-message {
+  white-space: pre-wrap;
+  margin: 10px 0;
+  font-size: 15px;
+  color: #294564;
+  line-height: 1.6;
+}
+
+.udp-client-page .alert-meta {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 18px;
+  margin: 18px 0;
+  color: #70839b;
+  font-size: 12px;
+}
+
+.udp-client-page .ack-button {
+  padding: 12px 20px;
+  border: none;
+  border-radius: 8px;
+  background: linear-gradient(135deg, var(--brand), var(--brand-deep));
+  color: #fff;
+  font-size: 13px;
+  font-weight: 700;
+  letter-spacing: 0.04em;
+  transition: transform 160ms ease, filter 160ms ease;
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.udp-client-page .ack-button:hover:not(:disabled) {
+  transform: translateY(-1px);
+  filter: brightness(1.03);
+}
+
+.udp-client-page .ack-button:disabled {
+  background: linear-gradient(135deg, #2f8b66, #2d6d55);
+  cursor: default;
+  opacity: 0.95;
+}
+
+.udp-client-page .columns {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 16px;
+  margin-top: 16px;
+}
+
+.udp-client-page .card {
+  min-width: 0;
+  margin-top: 16px;
+  padding: 20px;
+  border: 1px solid var(--line);
+  border-radius: 12px;
+  background: var(--panel);
+  box-shadow: var(--shadow);
+  transition: transform 180ms ease, box-shadow 180ms ease, border-color 180ms ease;
+}
+
+.udp-client-page .card:hover {
+  transform: translateY(-2px);
+  border-color: var(--line-strong);
+  box-shadow: 0 10px 24px rgb(17 40 67 / 10%);
+}
+
+.udp-client-page .columns .card {
+  margin-top: 0;
+}
+
+.udp-client-page .card-heading {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  margin-bottom: 17px;
+}
+
+.udp-client-page .card-heading h3 {
+  margin: 4px 0 0;
+  color: #203653;
+  font-size: 15px;
+  font-weight: 700;
+}
+
+.udp-client-page .card-icon {
+  display: grid;
+  place-items: center;
+  width: 32px;
+  height: 32px;
+  border-radius: 8px;
+  background: var(--brand-soft);
+  color: var(--brand);
+  font-size: 15px;
+}
+
+.udp-client-page .live-label {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  color: var(--success);
+  font-size: 11px;
+  font-weight: 700;
+}
+
+.udp-client-page .history-count {
+  color: #798ba4;
+  font-size: 11px;
+}
+
+.udp-client-page .card dl {
+  display: grid;
+  grid-template-columns: 1fr auto;
+  gap: 13px;
+  margin: 0;
+  font-size: 12px;
+}
+
+.udp-client-page .card dt {
+  color: #78879a;
+}
+
+.udp-client-page .card dd {
+  margin: 0;
+  color: #294564;
+  font-weight: 600;
+  text-align: right;
+  overflow-wrap: anywhere;
+}
+
+.udp-client-page .offline {
+  color: var(--success);
+}
+
+.udp-client-page .events {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.udp-client-page .events li {
+  padding: 9px 0;
+  border-bottom: 1px solid #edf2f8;
+  color: #597089;
+  font-size: 12px;
+  line-height: 1.5;
+}
+
+.udp-client-page .events li:first-child {
+  padding-top: 0;
+}
+
+.udp-client-page .events li:last-child {
+  border-bottom: 0;
+  padding-bottom: 0;
+}
+
+.udp-client-page .muted {
+  margin: 0;
+  color: #8a98ad;
+  font-size: 13px;
+}
+
+.udp-client-page .history-row {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  width: 100%;
+  padding: 13px 8px;
+  border: 0;
+  border-top: 1px solid #edf2f8;
+  background: transparent;
+  color: #294564;
+  text-align: left;
+  transition: background 160ms ease, padding 160ms ease;
+  cursor: pointer;
+  border-radius: 6px;
+}
+
+.udp-client-page .history-row:hover {
+  background: #f4f8fc;
+}
+
+.udp-client-page .history-row > span:nth-child(2) {
+  display: flex;
+  min-width: 0;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.udp-client-page .history-row small {
+  max-width: 540px;
+  overflow: hidden;
+  color: #7a8ba1;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.udp-client-page .history-row time {
+  margin-left: auto;
+  color: #7a8ba1;
+  font-size: 11px;
+  white-space: nowrap;
+}
+
+.udp-client-page .history-dot {
+  width: 9px;
+  height: 9px;
+  flex-shrink: 0;
+  border-radius: 50%;
+  background: linear-gradient(180deg, #eaab50, #d1893a);
+}
+
+.udp-client-page footer {
+  padding: 24px 0 20px;
+  color: #8593a4;
+  font-size: 11px;
+  text-align: center;
+  letter-spacing: 0.04em;
+}
+
+@keyframes ticker-scroll {
+  from {
+    transform: translateX(0);
+  }
+  to {
+    transform: translateX(-50%);
+  }
+}
+
+@keyframes dash-flow {
+  to {
+    stroke-dashoffset: -88;
+  }
+}
+
+@keyframes hub-pulse {
+  0% {
+    opacity: 0.65;
+    transform: scale(0.78);
+  }
+  75%,
+  100% {
+    opacity: 0;
+    transform: scale(1.35);
+  }
+}
+
+@keyframes status-blink {
+  0%,
+  100% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.45;
+  }
+}
+
+@keyframes alert-pulse {
+  0% {
+    box-shadow: 0 10px 30px rgb(191 61 61 / 8%);
+  }
+  100% {
+    box-shadow: 0 14px 35px rgb(191 61 61 / 18%);
+  }
+}
+
+@media (max-width: 680px) {
+  .udp-client-page .page {
+    width: min(100% - 28px, 1040px);
+    padding-top: 18px;
+  }
+  .udp-client-page .columns {
+    grid-template-columns: 1fr;
+  }
+  .udp-client-page .topbar {
+    gap: 10px;
+  }
+  .udp-client-page .brand-mark {
+    width: 40px;
+    height: 40px;
+  }
+  .udp-client-page .brand-copy h1 {
+    font-size: 15px;
+  }
+  .udp-client-page .status {
+    gap: 6px;
+    padding: 7px 9px;
+    font-size: 10px;
+  }
+  .udp-client-page .intro {
+    min-height: 0;
+    gap: 6px;
+  }
+  .udp-client-page .intro-copy {
+    flex: 1;
+  }
+  .udp-client-page .network-art {
+    width: 34%;
+    min-width: 105px;
+    margin-right: -8px;
+  }
+  .udp-client-page .ticker-group {
+    gap: 16px;
+    padding: 9px 14px;
+    font-size: 9px;
+  }
+  .udp-client-page .alert-panel {
+    min-height: 210px;
+    padding: 22px;
+  }
+  .udp-client-page .alert-meta {
+    flex-direction: column;
+    gap: 7px;
+  }
+  .udp-client-page .card {
+    padding: 18px;
+  }
+  .udp-client-page .history-row small {
+    max-width: 180px;
+  }
+}

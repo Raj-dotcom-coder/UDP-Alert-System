@@ -1,4 +1,4 @@
-﻿import React from "react";
+import React from "react";
 import { HashRouter, Routes, Route, Navigate } from "react-router-dom";
 
 import Login from "./pages/Login";
@@ -17,7 +17,8 @@ function getStoredUser() {
 function RequireRole({ role, children }) {
   const user = getStoredUser();
   if (!user?.token) return <Navigate to="/login" replace />;
-  if (user.role !== role) return <Navigate to="/login" replace />;
+  const allowed = Array.isArray(role) ? role : [role];
+  if (!allowed.includes(user.role)) return <Navigate to="/login" replace />;
   return children;
 }
 
@@ -31,12 +32,12 @@ function App() {
 
         <Route
           path="/admin"
-          element={<RequireRole role="admin"><AdminDashboard /></RequireRole>}
+          element={<RequireRole role={["admin", "client"]}><AdminDashboard /></RequireRole>}
         />
 
         <Route
           path="/client"
-          element={<RequireRole role="client"><ClientDashboard /></RequireRole>}
+          element={<RequireRole role={["admin", "client"]}><ClientDashboard /></RequireRole>}
         />
 
         {/* Default Route */}

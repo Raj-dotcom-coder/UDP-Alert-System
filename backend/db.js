@@ -7,7 +7,8 @@ const bcrypt = require("bcryptjs");
 const mongoUri = process.env.MONGODB_URI || "mongodb://127.0.0.1:27017";
 const mongoDatabase = process.env.MONGODB_DB || "udp_alert_system";
 const mongoMemoryVersion = process.env.MONGOMS_VERSION || "7.0.14";
-let client = new MongoClient(mongoUri);
+const mongoOptions = { serverSelectionTimeoutMS: 2000, connectTimeoutMS: 2000 };
+let client = new MongoClient(mongoUri, mongoOptions);
 let databasePromise;
 let memoryServer;
 
@@ -19,7 +20,7 @@ async function startMemoryDatabase() {
     instance: { dbName: mongoDatabase }
   });
 
-  client = new MongoClient(memoryServer.getUri());
+  client = new MongoClient(memoryServer.getUri(), mongoOptions);
   console.log("Falling back to an in-memory MongoDB instance.");
   return memoryServer;
 }
@@ -75,6 +76,24 @@ async function ensureAdminUser() {
   console.log(`Built-in admin user created: ${username}`);
 }
 
+async function ensureClientUser() {
+  const username = process.env.CLIENT_USERNAME || "client";
+  const password = process.env.CLIENT_PASSWORD || "Client@123";
+  const users = await getCollection("users");
+  const existingUser = await users.findOne({ username }, { projection: { _id: 1 } });
+
+  if (existingUser) return;
+
+  const passwordHash = await bcrypt.hash(password, 10);
+  await users.insertOne({
+    username,
+    password: passwordHash,
+    role: "client",
+    created_at: new Date()
+  });
+  console.log(`Built-in client user created: ${username}`);
+}
+
 async function connectDatabase() {
   const database = await getDatabase();
   await Promise.all([
@@ -84,6 +103,7 @@ async function connectDatabase() {
     database.collection("alert_logs").createIndex({ alert_id: 1 })
   ]);
   await ensureAdminUser();
+  await ensureClientUser();
 }
 
 async function closeDatabase() {
@@ -97,7 +117,7 @@ async function closeDatabase() {
   }
 
   databasePromise = undefined;
-  client = new MongoClient(mongoUri);
+  client = new MongoClient(mongoUri, mongoOptions);
 }
 
 module.exports = {

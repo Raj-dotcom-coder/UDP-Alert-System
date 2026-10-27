@@ -34,9 +34,11 @@ async function registerDevice(message, remote) {
     { device_id: device.deviceId },
     {
       $set: {
+        device_id: device.deviceId,
         name: device.name,
         ip_address: device.ipAddress,
         udp_port: device.port,
+        connection_type: "UDP",
         status: "ONLINE",
         last_seen: device.lastSeen
       },
@@ -62,7 +64,14 @@ async function handleHeartbeat(message, remote) {
   const devicesCollection = await db.devices;
   await devicesCollection.updateOne(
     { device_id: device.deviceId },
-    { $set: { ip_address: device.ipAddress, status: "ONLINE", last_seen: device.lastSeen } }
+    {
+      $set: {
+        ip_address: device.ipAddress,
+        status: "ONLINE",
+        last_seen: device.lastSeen,
+        connection_type: "UDP"
+      }
+    }
   );
 }
 
@@ -72,11 +81,35 @@ async function handleAcknowledgement(message) {
   const alertId = db.toObjectId(message.alertId);
   if (!alertId) return;
 
+  const device = devices.get(message.deviceId);
+  const deviceName = message.deviceName || device?.name || message.deviceId;
+
   const alertLogs = await db.alertLogs;
-  await alertLogs.insertOne({ alert_id: alertId, device_id: message.deviceId, action: "ACK", timestamp: new Date() });
+  await alertLogs.updateOne(
+    { alert_id: alertId, device_id: message.deviceId },
+    {
+      $set: {
+        alert_id: alertId,
+        device_id: message.deviceId,
+        device_name: deviceName,
+        action: "ACK",
+        timestamp: new Date()
+      }
+    },
+    { upsert: true }
+  );
+
+  const devicesCollection = await db.devices;
+  const onlineDevices = await devicesCollection.find({ status: "ONLINE" }).toArray();
+  const ackLogs = await alertLogs.find({ alert_id: alertId, action: "ACK" }).toArray();
+  const ackedDeviceIds = new Set(ackLogs.map((l) => l.device_id));
+
+  const allAcked = onlineDevices.length > 0 && onlineDevices.every((d) => ackedDeviceIds.has(d.device_id));
+  const newStatus = allAcked ? "ACKNOWLEDGED" : "PARTIALLY_ACKNOWLEDGED";
 
   const alerts = await db.alerts;
-  await alerts.updateOne({ _id: alertId }, { $set: { status: "ACKNOWLEDGED" } });
+  await alerts.updateOne({ _id: alertId }, { $set: { status: newStatus } });
+  console.log(`UDP ACK received from ${message.deviceId} (${deviceName}) for alert ${message.alertId}`);
 }
 
 function handleMessage(buffer, remote) {
@@ -112,7 +145,7 @@ function startUDPServer() {
     const cutoff = new Date(Date.now() - 60_000);
     const devicesCollection = await db.devices;
     await devicesCollection.updateMany(
-      { last_seen: { $lt: cutoff }, status: "ONLINE" },
+      { connection_type: "UDP", last_seen: { $lt: cutoff }, status: "ONLINE" },
       { $set: { status: "OFFLINE" } }
     );
     for (const [deviceId, device] of devices) {
@@ -143,7 +176,8 @@ function getDevices() {
     ip: device.ipAddress,
     port: device.port,
     status: "ONLINE",
-    lastSeen: device.lastSeen
+    lastSeen: device.lastSeen,
+    connectionType: "UDP"
   }));
 }
 

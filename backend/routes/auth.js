@@ -42,7 +42,7 @@ router.post("/login", async (req, res) => {
     if (!user || !(await bcrypt.compare(password, user.password))) {
       return res.status(401).json({ success: false, message: "Invalid username or password." });
     }
-    if (role && user.role !== role) return res.status(403).json({ success: false, message: "Incorrect user role." });
+    // Authenticate user by credentials and return their registered role
     res.json({ success: true, message: "Login successful.", token: createToken(user), user: toUser(user) });
   } catch (error) {
     console.error("Login error:", error.message);

@@ -1,5 +1,4 @@
 ﻿const dgram = require("dgram");
-cd 
 const client = dgram.createSocket("udp4");
 
 

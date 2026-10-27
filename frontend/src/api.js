@@ -1,10 +1,31 @@
-const API_BASE_URL = import.meta.env.VITE_API_URL?.replace(/\/+$/, "")
-  || (import.meta.env.DEV ? "http://localhost:5000/api" : "");
+export function getApiBaseUrl() {
+  const custom = localStorage.getItem("udpServerUrl")?.trim();
+  if (custom) {
+    return custom.replace(/\/+$/, "");
+  }
+
+  if (import.meta.env.VITE_API_URL) {
+    return import.meta.env.VITE_API_URL.replace(/\/+$/, "");
+  }
+
+  if (typeof window !== "undefined" && window.location && window.location.hostname) {
+    const protocol = window.location.protocol === "https:" ? "https:" : "http:";
+    return `${protocol}//${window.location.hostname}:5000/api`;
+  }
+
+  return "http://localhost:5000/api";
+}
+
+export function setApiBaseUrl(url) {
+  if (!url) {
+    localStorage.removeItem("udpServerUrl");
+  } else {
+    localStorage.setItem("udpServerUrl", url.trim().replace(/\/+$/, ""));
+  }
+}
 
 export async function apiRequest(path, options = {}) {
-  if (!API_BASE_URL) {
-    throw new Error("The backend is not configured yet. Set the VITE_API_URL GitHub Actions variable after hosting the backend.");
-  }
+  const baseUrl = getApiBaseUrl();
 
   let storedUser = null;
   try {
@@ -15,18 +36,18 @@ export async function apiRequest(path, options = {}) {
 
   const { headers = {}, ...requestOptions } = options;
   const requestHeaders = { "Content-Type": "application/json", ...headers };
-  if (storedUser?.token && !path.startsWith("/auth/login")) {
+  if (storedUser?.token && !path.startsWith("/auth/login") && !path.startsWith("/auth/register")) {
     requestHeaders.Authorization = `Bearer ${storedUser.token}`;
   }
 
   let response;
   try {
-    response = await fetch(`${API_BASE_URL}${path}`, {
+    response = await fetch(`${baseUrl}${path}`, {
       ...requestOptions,
       headers: requestHeaders
     });
   } catch (error) {
-    throw new Error("Unable to reach the alert server.");
+    throw new Error(`Unable to reach the alert server at ${baseUrl}. Ensure backend is running and reachable on this network.`);
   }
 
   const contentType = response.headers.get("content-type") || "";
